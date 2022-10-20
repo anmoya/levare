@@ -3,4 +3,4 @@ using MediatR;
 
 namespace Levare.Mediator.Queries;
 
-public record GetReportsQuery : IRequest<IEnumerable<ReportDto>>;
+public record GetReportsQuery(int page, int size) : IRequest<IEnumerable<ReportDto>>;

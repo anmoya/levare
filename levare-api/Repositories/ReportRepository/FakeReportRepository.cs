@@ -1,6 +1,6 @@
 using AutoMapper;
 using Levare.Data.Entities;
-using Levare.Dtos;
+using Microsoft.EntityFrameworkCore;
 
 namespace Levare.Repositories.ReportRepository;
 
@@ -17,9 +17,11 @@ public class FakeReportRepository : IReportRepository
         _mapper = mapper;
     }
 
-    public Task<Report> GetReport(int id)
+    public async Task<Report> GetReport(int id)
     {
-        throw new NotImplementedException();
+        var report = await _reports.AsQueryable().FirstOrDefaultAsync(w => w.Id == id);
+
+        return report;
     }
 
     public async Task<IEnumerable<Report>> GetReportList(int pageIndex, int pageSize)
@@ -39,20 +41,14 @@ public class FakeReportRepository : IReportRepository
 
     public async Task<Report> CreateReport(Report dto)
     {
-        try
-        {
 
-            _reports.Add(dto);
+        _reports.Add(dto);
 
-            dto.CreatedAt = DateTime.UtcNow;
-            dto.CreatedBy = 1;
+        dto.CreatedAt = DateTime.UtcNow;
+        dto.CreatedBy = 1;
 
-            return await Task.FromResult(dto);
-        }
-        catch (Exception ex)
-        {
-            throw;
-        }
+        return await Task.FromResult(dto);
+
     }
 
     public Task UpdateReport(int id, Report dto)

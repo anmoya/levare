@@ -25,10 +25,18 @@ public class ReportController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<ActionResult> Get()
+    public async Task<ActionResult> GetList(int page, int size)
     {
-        var asdf = await _sender.Send(new GetReportsQuery());
+        var asdf = await _sender.Send(new GetReportsQuery(page, size));
 
         return Ok(asdf);
+    }
+
+    [HttpGet("{id}")]
+    public async Task<ActionResult> Get(int id)
+    {
+        var report = await _sender.Send(new GetReportQuery(id));
+
+        return Ok(report);
     }
 }
