@@ -1,5 +1,6 @@
 using Levare.Data;
 using Levare.Data.Entities;
+using Microsoft.EntityFrameworkCore;
 
 namespace Levare.Repositories.ReportRepository;
 
@@ -14,34 +15,42 @@ public class ReportRepository : IReportRepository
 
     public async Task<Report> CreateReport(Report dto)
     {
-        await _context.AddAsync(dto);
-        await _context.SaveChangesAsync();
+        await _context.Reports.AddAsync(dto);
 
         return dto;
     }
 
-    public Task DeleteReport(int id)
+    public async Task DeleteReport(int id)
     {
-        throw new NotImplementedException();
+        var reportToDelete = await _context.Reports.Where(w => w.Id == id).SingleAsync();
+
+        _context.Reports.Remove(reportToDelete);
     }
 
-    public Task<Report> GetReport(int id)
+    public async Task<Report> GetReport(int id)
     {
-        throw new NotImplementedException();
+        var report = await _context.Reports.Where(w => w.Id == id).SingleAsync();
+
+        return report;
     }
 
-    public Task<IEnumerable<Report>> GetReportList(int pageIndex, int pageSize)
+    public async Task<IEnumerable<Report>> GetReportList(int pageIndex, int pageSize)
     {
-        throw new NotImplementedException();
+        var reports = await _context.Reports.Take(pageSize).Skip(pageSize * pageIndex).ToListAsync();
+
+        return reports;
     }
 
-    public Task<IEnumerable<Report>> GetReportsByClient(int id)
+    public async Task<IEnumerable<Report>> GetReportsByClient(int id)
     {
-        throw new NotImplementedException();
+        var reports = await _context.Reports.Where(w => w.CustomerId == id).ToListAsync();
+
+        return reports;
     }
 
-    public Task<IEnumerable<Report>> GetReportWithRevisions(int id)
+    public async Task<IEnumerable<Report>> GetReportWithRevisions(int id)
     {
+        // var reports = await _context.Reports.Include<Revision>().Where(w => w.Id == id).ToListAsync();
         throw new NotImplementedException();
     }
 

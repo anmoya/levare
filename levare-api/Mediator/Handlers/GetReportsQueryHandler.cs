@@ -20,7 +20,7 @@ public class GetReportsQueryHandler : IRequestHandler<GetReportsQuery, IEnumerab
 
     public async Task<IEnumerable<ReportDto>> Handle(GetReportsQuery request, CancellationToken cancellationToken)
     {
-        var asdf = await _reportRepository.GetReportList(1, 5);
+        var asdf = await _reportRepository.GetReportList(request.page, request.size);
 
         return _mapper.Map<IEnumerable<ReportDto>>(asdf);
     }
